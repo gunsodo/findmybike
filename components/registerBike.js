@@ -43,7 +43,7 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                             <p className="text-xs text-gray-500">
                                 Tracker ID
                             </p>
-                            <input type='text' className="w-full py-1 px-2 border-[0.1em] rounded-md"></input>
+                            <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                         </div>
 
                         <div className="mt-4">
@@ -52,7 +52,7 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                                 onClick={() => setIsOpen(false)}
                             >
-                                Submit
+                                Register
                             </button>
                         </div>
                     </div>

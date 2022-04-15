@@ -10,7 +10,7 @@ import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export default function Home() {
-  mapboxgl.accessToken = 'pk.eyJ1IjoiZ3Vuc29kbyIsImEiOiJja282bHRrYmYwd3d5MnhteTU0eWZqNjJnIn0.9vEapIZT5ijllLtYQaLhzw';
+  mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
   const mapContainer = useRef(null);
   const map = useRef(null);
@@ -18,6 +18,7 @@ export default function Home() {
   const [lat, setLat] = useState(0);
   const [zoom, setZoom] = useState(15);
   const [isOpen, setIsOpen] = useState(false);
+  const [isLocked, setIsLocked] = useState(false);
 
   useEffect(() => {
     if (!navigator.geolocation) {
@@ -60,7 +61,7 @@ export default function Home() {
       <Settings />
       <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
         <div id='map' className='map-container w-full h-full z-0' ref={mapContainer}/>
-        <div className='fixed bottom-0 right-0 h-56 w-full sm:w-[36rem] z-0 p-6 transition-width duration-500'>
+        <div className='fixed bottom-0 right-0 h-56 w-full sm:w-[40rem] z-0 p-6 transition-width duration-500'>
           <div className='flex justify-center items-center w-full h-full bg-white rounded-2xl drop-shadow-lg transition'>
             <div className='relative'>
               <button className='fixed flex flex-row space-x-1 px-2 py-1 top-0 right-0 mt-4 mr-4 z-20 rounded-lg bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-medium text-xs sm:text-sm'
@@ -70,11 +71,11 @@ export default function Home() {
               </button>
             </div>
 
-            <div className='grid grid-cols-5 gap-4 h-full w-full p-4'>
-              <div className='relative col-span-2'>
+            <div className='grid grid-cols-3 gap-4 h-full w-full p-4'>
+              <div className='relative col-span-1'>
                 <Image src='/bike.png' layout='fill' objectFit='contain' />
               </div>
-              <div className='flex flex-col col-span-3 mr-4 justify-center space-y-3'>
+              <div className='flex flex-col col-span-2 mr-4 justify-center space-y-3'>
                 <div>
                   <p className='font-bold text-2xl mb-2'>Main Bicycle</p>
                   <p className='text-xs sm:text-sm'>Last moved: 12 minutes ago</p>
@@ -97,14 +98,25 @@ export default function Home() {
                       <p>Sound</p>
                     </div>
                   </button>
-                  <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
-                    <div className='flex flex-row space-x-1 items-center justify-center'>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                      </svg>
-                      <p>Lock</p>
-                    </div>
-                  </button>
+
+                  {isLocked ?
+                    <button className='bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
+                      <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(false)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                        </svg>
+                        <p>Locked</p>
+                      </div>
+                    </button> :
+                    <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
+                      <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(true)}>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                        </svg>
+                        <p>Unlocked</p>
+                      </div>
+                    </button>
+                  }
                 </div>
               </div>
             </div>
@@ -113,18 +125,6 @@ export default function Home() {
       </main>
 
       <RegisterBike isOpen={isOpen} setIsOpen={setIsOpen} />
-      {/* <footer className={styles.footer}>
-        <a
-          href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Powered by{' '}
-          <span className={styles.logo}>
-            <Image src="/vercel.svg" alt="Vercel Logo" width={72} height={16} />
-          </span>
-        </a>
-      </footer> */}
     </div>
   )
 }
