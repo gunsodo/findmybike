@@ -34,7 +34,7 @@ export default function Edit() {
                                 </div>
                                 <p className='text-lg font-medium'>Find My Bike</p>
                             </div>
-                            <h2 className="text-xl font-bold leading-6 text-gray-900">Create Account</h2>
+                            <h2 className="text-xl font-bold leading-6 text-gray-900">Edit Profile</h2>
                             <div className="flex flex-col space-y-2">
                                 <p className="text-xs text-gray-500">
                                     Username
