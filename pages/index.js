@@ -36,12 +36,56 @@ export default function Home() {
           center: [position.coords.longitude, position.coords.latitude],
           zoom: zoom
         });
+        
+        map.current.on('load', () => {
+          map.current.addSource('route', {
+            'type': 'geojson',
+            'data': {
+              'type': 'Feature',
+              'properties': {},
+              'geometry': {
+                'type': 'LineString',
+                'coordinates': [
+                  [127.356705,36.368258],
+                  [127.356302,36.368189],
+                  [127.356705,36.368258],
+                  [127.356302,36.368189],
+                  [127.358908,36.364177],
+                  [127.358801,36.364094],
+                  [127.359296,36.363383],
+                  [127.358232,36.362697]
+                ]
+              }
+            }
+          });
+          map.current.addLayer({
+            'id': 'route',
+            'type': 'line',
+            'source': 'route',
+            'layout': {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            'paint': {
+              'line-color': '#3248a8',
+              'line-width': 6
+            }
+          });
+        });
       }, () => {
         console.log('Unable to retrieve your location');
       });
     }
   }, []);
+/*
 
+            [36.368258,127.356705],
+            [36.368189,127.356302],
+            [36.364177,127.358908],
+            [36.364094,127.358801],
+            [36.363383,127.359296],
+            [36.362697,127.358232]
+*/
   // useEffect(() => {
   //   if (!map.current) return;
   //   map.current.flyTo({
