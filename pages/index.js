@@ -58,8 +58,8 @@ export default function Home() {
 
       <Logo />
       <Settings />
-      <main className={'w-screen h-screen' + (isOpen && ' blur-md')}>
-        <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} />
+      <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
+        <div id='map' className='map-container w-full h-full z-0' ref={mapContainer}/>
         <div className='fixed bottom-0 right-0 h-56 w-full sm:w-[36rem] z-0 p-6 transition-width duration-500'>
           <div className='flex justify-center items-center w-full h-full bg-white rounded-2xl drop-shadow-lg transition'>
             <div className='relative'>
@@ -112,7 +112,7 @@ export default function Home() {
         </div>
       </main>
 
-      {/* <RegisterBike isOpen={isOpen} setIsOpen={setIsOpen} /> */}
+      <RegisterBike isOpen={isOpen} setIsOpen={setIsOpen} />
       {/* <footer className={styles.footer}>
         <a
           href="https://vercel.com?utm_source=create-next-app&utm_medium=default-template&utm_campaign=create-next-app"
