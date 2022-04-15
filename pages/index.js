@@ -8,6 +8,7 @@ import RegisterBike from '../components/registerBike';
 // Mapbox
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import UsageDisc from '../components/usageDisc';
 
 export default function Home() {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
@@ -20,26 +21,26 @@ export default function Home() {
   const [isOpen, setIsOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.log("No navigator found");
-    } else {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
-        console.log(position.coords.latitude);
+  // useEffect(() => {
+  //   if (!navigator.geolocation) {
+  //     console.log("No navigator found");
+  //   } else {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       setLat(position.coords.latitude);
+  //       setLng(position.coords.longitude);
+  //       console.log(position.coords.latitude);
 
-        map.current = new mapboxgl.Map({
-          container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v11',
-          center: [position.coords.longitude, position.coords.latitude],
-          zoom: zoom
-        });
-      }, () => {
-        console.log('Unable to retrieve your location');
-      });
-    }
-  }, []);
+  //       map.current = new mapboxgl.Map({
+  //         container: mapContainer.current,
+  //         style: 'mapbox://styles/mapbox/streets-v11',
+  //         center: [position.coords.longitude, position.coords.latitude],
+  //         zoom: zoom
+  //       });
+  //     }, () => {
+  //       console.log('Unable to retrieve your location');
+  //     });
+  //   }
+  // }, []);
 
   // useEffect(() => {
   //   if (!map.current) return;
@@ -60,12 +61,12 @@ export default function Home() {
       <Logo />
       <Settings />
       <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
-        <div id='map' className='map-container w-full h-full z-0' ref={mapContainer}/>
-        <div className='fixed bottom-0 right-0 h-56 w-full sm:w-[40rem] z-0 p-6 transition-width duration-500'>
-          <div className='flex justify-center items-center w-full h-full bg-white rounded-2xl drop-shadow-lg transition'>
+        {/* <div id='map' className='map-container w-full h-full z-0' ref={mapContainer}/> */}
+        <div className='fixed bottom-0 right-0 w-full sm:w-[32rem] z-0 p-6 transition-all duration-500'>
+          <div className='flex justify-center items-center w-full h-full bg-white rounded-2xl drop-shadow-lg'>
             <div className='relative'>
               <button className='fixed flex flex-row space-x-1 px-2 py-1 top-0 right-0 mt-4 mr-4 z-20 rounded-lg bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-medium text-xs sm:text-sm'
-                onClick={() => { setIsOpen(true); console.log(isOpen); }}>
+                onClick={() => setIsOpen(true)}>
                 <p>+</p>
                 <p>Add</p>
               </button>
@@ -75,6 +76,7 @@ export default function Home() {
               <div className='relative col-span-1'>
                 <Image src='/bike.png' layout='fill' objectFit='contain' />
               </div>
+
               <div className='flex flex-col col-span-2 mr-4 justify-center space-y-3'>
                 <div>
                   <p className='font-bold text-2xl mb-2'>Main Bicycle</p>
@@ -98,7 +100,6 @@ export default function Home() {
                       <p>Sound</p>
                     </div>
                   </button>
-
                   {isLocked ?
                     <button className='bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
                       <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(false)}>
@@ -113,11 +114,15 @@ export default function Home() {
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-6 w-6" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
                           <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
                         </svg>
-                        <p>Unlocked</p>
+                        {/* <p>Unlocked</p> */}
                       </div>
                     </button>
                   }
                 </div>
+              </div>
+
+              <div className='col-span-3'>
+                <UsageDisc />
               </div>
             </div>
           </div>
