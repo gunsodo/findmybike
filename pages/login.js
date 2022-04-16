@@ -37,7 +37,7 @@ export default function Login() {
                             <h2 className="text-xl font-bold leading-6 text-gray-900">Login</h2>
                             <div className="flex flex-col space-y-2">
                                 <p className="text-xs text-gray-500">
-                                    Username
+                                    Username / Email
                                 </p>
                                 <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
