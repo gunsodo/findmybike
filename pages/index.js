@@ -7,11 +7,31 @@ import RegisterBike from '../components/registerBike';
 import UsageDisc from '../components/usageDisc';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 
+// Prisma
+import { PrismaClient } from '@prisma/client';
+const prisma = new PrismaClient()
+
 // Mapbox
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-export default function Home() {
+export async function getServerSideProps(){
+  const tracker = await prisma.tracker.findUnique({
+    where: {
+      id: 1,
+    },
+  });
+  const locations = tracker.locations.map(str => str.split(",").map(Number));
+  return {
+    props: {
+      locations: locations
+    }
+  };
+}
+
+export default function Home({ locations }) {
+  console.log(locations)
+
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
   const mapContainer = useRef(null);
@@ -47,16 +67,7 @@ export default function Home() {
               'properties': {},
               'geometry': {
                 'type': 'LineString',
-                'coordinates': [
-                  [127.356705, 36.368258],
-                  [127.356302, 36.368189],
-                  [127.356705, 36.368258],
-                  [127.356302, 36.368189],
-                  [127.358908, 36.364177],
-                  [127.358801, 36.364094],
-                  [127.359296, 36.363383],
-                  [127.358232, 36.362697]
-                ]
+                'coordinates': locations
               }
             }
           })};
@@ -172,3 +183,4 @@ export default function Home() {
     </div>
   )
 }
+
