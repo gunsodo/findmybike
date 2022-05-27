@@ -49,7 +49,6 @@ export default function Home({ locations }) {
       navigator.geolocation.getCurrentPosition((position) => {
         setLat(position.coords.latitude);
         setLng(position.coords.longitude);
-        console.log(position.coords.latitude);
 
         map.current = new mapboxgl.Map({
           container: mapContainer.current,
