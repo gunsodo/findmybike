@@ -13,7 +13,7 @@ function getRandomInt(min, max) {
 
 // POST /api/tracker/create
 export default async function handle(req, res) {
-    const { name } = req.body;
+    const { tid, name } = req.body;
 
     // let num = getRandomInt(3, 10);
     // var locations = [];
@@ -27,6 +27,7 @@ export default async function handle(req, res) {
 
     const result = await prisma.tracker.create({
         data: {
+            tid,
             name,
             // locations
         },

@@ -27,7 +27,7 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                             Register New Vehicle
                         </Dialog.Title>
 
-                        <div className="flex flex-col space-y-2">
+                        {/* <div className="flex flex-col space-y-2">
                             <p className="text-xs text-gray-500">
                                 Vehicle Type
                             </p>
@@ -37,11 +37,18 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                                 <option value="scooter">Scooter</option>
                                 <option value="car">Car</option>
                             </select>
-                        </div>
+                        </div> */}
 
                         <div className="flex flex-col space-y-2">
                             <p className="text-xs text-gray-500">
                                 Tracker ID
+                            </p>
+                            <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                        </div>
+
+                        <div className="flex flex-col space-y-2">
+                            <p className="text-xs text-gray-500">
+                                Name Your Bike
                             </p>
                             <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                         </div>

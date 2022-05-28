@@ -12,6 +12,7 @@ datasource db {
 
 model Tracker {
   id          Int       @id @default(autoincrement())
+  tid         String
   name        String
   locations   String[]  
 }
