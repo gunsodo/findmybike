@@ -6,16 +6,15 @@ async function AddTracker(name, tid) {
     if(!name || !tid) return 0;
     const body = JSON.stringify({
         tid: tid,
-        name: name
+        name: name,
+        uid: 0
     })
     const res = await fetch('/api/tracker/create',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: body
     });
-    const result = await res.json()
-    console.log(result)
-    return result;
+    return await res.json();
 }
 
 export default function RegisterBike({ isOpen, setIsOpen }) {

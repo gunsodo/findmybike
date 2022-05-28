@@ -1,6 +1,40 @@
 import Head from "next/head";
+import { useState } from "react";
+
+function LoginFailed(msg){
+    console.log(msg)
+    return 0
+}
+
+function LoginSuccess(user){
+    console.log('Login successful')
+    console.log(user)
+    return 0
+}
+
+async function AttemptLogin(username, password) {
+    if(!username) return LoginFailed('Enter your username');
+    if(!password) return LoginFailed('Enter your password');
+    const body = JSON.stringify({
+        username: username,
+        password: password
+    })
+    const res = await fetch('/api/user/login',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: body
+    });
+    if(res.status==404) return LoginFailed('User not found');
+    if(res.status==403) return LoginFailed('Password Incorrect');
+    const user = await res.json()
+    LoginSuccess(user)
+    return user;
+}
 
 export default function Login() {
+    const [user, setUser] = useState("")
+    const [pass, setPass] = useState("")
+
     return (
         <div>
             <Head>
@@ -39,20 +73,21 @@ export default function Login() {
                                 <p className="text-xs text-gray-500">
                                     Username / Email
                                 </p>
-                                <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                                <input value={user} onChange={(e) => setUser(e.target.value)}  type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
 
                             <div className="flex flex-col space-y-2">
                                 <p className="text-xs text-gray-500">
                                     Password
                                 </p>
-                                <input type='password' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                                <input value={pass} onChange={(e) => setPass(e.target.value)}  type='password' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
 
                             <div className="flex flex-row items-center justify-between mt-4">
                                 <button
                                     type="button"
                                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                    onClick={async() => await AttemptLogin(user, pass)}
                                 >
                                     Login
                                 </button>

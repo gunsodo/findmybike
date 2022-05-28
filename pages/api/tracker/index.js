@@ -9,5 +9,6 @@ export default async function handle(req, res) {
             id: tracker_id
         },
     });
-    res.json(result);
+    if(result) res.json(result);
+    else res.status(404)
 }
