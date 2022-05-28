@@ -16,22 +16,30 @@ import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
 export async function getServerSideProps() {
-  const trackers = await prisma.tracker.findMany();
-  return {
-    props: {
-      trackers: trackers
-    }
-  };
-}
-
-export default function Home({ trackers }) {
+  const uid=1;
+  const trackers = await prisma.tracker.findMany({
+    where: {
+        ownerId: uid,
+    },
+  });
+  
   const bikes = trackers.map(tracker => tracker.name)
   var locations = [];
   if(trackers.length>0){
     const tracker = trackers[0];
     locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
   }
+  return {
+    props: {
+      bikes: bikes,
+      locations: locations
+    }
+  };
+}
+
+export default function Home({ bikes, locations }) {
   console.log(locations)
+  console.log(bikes)
 
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
@@ -43,7 +51,6 @@ export default function Home({ trackers }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
-  console.log(bikes)
 
   // useEffect(() => {
   //   if (!navigator.geolocation) {
