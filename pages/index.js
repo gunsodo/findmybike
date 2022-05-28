@@ -15,22 +15,19 @@ import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 import ChooseBike from '../components/chooseBike';
 
+
 export async function getServerSideProps() {
-  const tracker = await prisma.tracker.findUnique({
-    where: {
-      id: 1,
-    },
-  });
-  console.log(tracker)
-  const locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
+  const trackers = await prisma.tracker.findMany();
   return {
     props: {
-      locations: locations
+      trackers: trackers
     }
   };
 }
 
-export default function Home({ locations }) {
+export default function Home({ trackers }) {
+  const tracker = trackers[0];
+  const locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
   console.log(locations)
 
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;

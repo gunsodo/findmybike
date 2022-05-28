@@ -1,6 +1,27 @@
 import { Dialog } from "@headlessui/react"
+import { useState } from "react";
+
+
+async function AddTracker(name, tid) {
+    if(!name || !tid) return 0;
+    const body = JSON.stringify({
+        tid: tid,
+        name: name
+    })
+    const res = await fetch('/api/tracker/create',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: body
+    });
+    const result = await res.json()
+    console.log(result)
+    return result;
+}
 
 export default function RegisterBike({ isOpen, setIsOpen }) {
+    const [name, setName] = useState("")
+    const [tid, setTid] = useState("")
+
     return (
         <div>
             <Dialog
@@ -43,21 +64,25 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                             <p className="text-xs text-gray-500">
                                 Tracker ID
                             </p>
-                            <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                            <input value={tid} onChange={(e) => setTid(e.target.value)}  type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                         </div>
 
                         <div className="flex flex-col space-y-2">
                             <p className="text-xs text-gray-500">
                                 Name Your Bike
                             </p>
-                            <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                            <input value={name} onChange={(e) => setName(e.target.value)} type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                         </div>
 
                         <div className="mt-4">
                             <button
                                 type="button"
                                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                onClick={() => setIsOpen(false)}
+                                onClick={async() => {
+                                    const res = await AddTracker(name, tid)
+                                    if(res) setIsOpen(false)
+                                    else 0
+                                }}//setIsOpen(false)}
                             >
                                 Register
                             </button>
