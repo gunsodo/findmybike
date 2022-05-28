@@ -5,6 +5,7 @@ import Settings from '../components/settings';
 import Image from 'next/image';
 import RegisterBike from '../components/registerBike';
 import UsageDisc from '../components/usageDisc';
+import ChooseBike from '../components/chooseBike';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 
 // Prisma
@@ -13,8 +14,6 @@ import prisma from "../utils/prisma";
 // Mapbox
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
-import ChooseBike from '../components/chooseBike';
-
 
 export async function getServerSideProps() {
   const trackers = await prisma.tracker.findMany();
