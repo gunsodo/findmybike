@@ -26,8 +26,12 @@ export async function getServerSideProps() {
 }
 
 export default function Home({ trackers }) {
-  const tracker = trackers[0];
-  const locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
+  const bikes = trackers.map(tracker => tracker.name)
+  var locations = [];
+  if(trackers.length>0){
+    const tracker = trackers[0];
+    locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
+  }
   console.log(locations)
 
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
@@ -40,8 +44,6 @@ export default function Home({ trackers }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
-  // Mock data
-  let bikes = ["Bike 1", "Bike 2", "Bike 3"];
   console.log(bikes)
 
   // useEffect(() => {
