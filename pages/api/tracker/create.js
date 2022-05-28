@@ -14,7 +14,7 @@ function getRandomInt(min, max) {
 // POST /api/tracker/create
 export default async function handle(req, res) {
     const { tid, name } = req.body;
-
+    const locations = []
     // let num = getRandomInt(3, 10);
     // var locations = [];
 
@@ -29,7 +29,7 @@ export default async function handle(req, res) {
         data: {
             tid,
             name,
-            // locations
+            locations
         },
     });
     res.json(result);

@@ -21,6 +21,7 @@ export async function getServerSideProps() {
       id: 1,
     },
   });
+  console.log(tracker)
   const locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
   return {
     props: {
