@@ -10,9 +10,19 @@ datasource db {
   url      = env("DATABASE_URL")
 }
 
+model User {
+  id          Int       @id @default(autoincrement())
+  username    String
+  password    String
+  name        String
+  trackers    Tracker[]
+}
+
 model Tracker {
   id          Int       @id @default(autoincrement())
   tid         String
   name        String
   locations   String[]  
+  owner       User      @relation(fields: [ownerId], references: [id])
+  ownerId     Int
 }
