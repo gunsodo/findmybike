@@ -8,20 +8,20 @@ import UsageDisc from '../components/usageDisc';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 
 // Prisma
-import { PrismaClient } from '@prisma/client';
-const prisma = new PrismaClient()
+import prisma from "../utils/prisma";
 
 // Mapbox
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
+import ChooseBike from '../components/chooseBike';
 
-export async function getServerSideProps(){
+export async function getServerSideProps() {
   const tracker = await prisma.tracker.findUnique({
     where: {
       id: 1,
     },
   });
-  const locations = tracker.locations.map(str => str.split(",").map(Number));
+  const locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
   return {
     props: {
       locations: locations
@@ -42,53 +42,57 @@ export default function Home({ locations }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
-  useEffect(() => {
-    if (!navigator.geolocation) {
-      console.log("No navigator found");
-    } else {
-      navigator.geolocation.getCurrentPosition((position) => {
-        setLat(position.coords.latitude);
-        setLng(position.coords.longitude);
+  // Mock data
+  let bikes = ["Bike 1", "Bike 2", "Bike 3"];
+  console.log(bikes)
 
-        map.current = new mapboxgl.Map({
-          container: mapContainer.current,
-          style: 'mapbox://styles/mapbox/streets-v11',
-          center: [position.coords.longitude, position.coords.latitude],
-          zoom: zoom
-        });
+  // useEffect(() => {
+  //   if (!navigator.geolocation) {
+  //     console.log("No navigator found");
+  //   } else {
+  //     navigator.geolocation.getCurrentPosition((position) => {
+  //       setLat(position.coords.latitude);
+  //       setLng(position.coords.longitude);
 
-        map.current.on('load', () => {
-          if (!map.current.getSource('route')) {
-            map.current.addSource('route', {
-            'type': 'geojson',
-            'data': {
-              'type': 'Feature',
-              'properties': {},
-              'geometry': {
-                'type': 'LineString',
-                'coordinates': locations
-              }
-            }
-          })};
-          map.current.addLayer({
-            'id': 'route',
-            'type': 'line',
-            'source': 'route',
-            'layout': {
-              'line-join': 'round',
-              'line-cap': 'round'
-            },
-            'paint': {
-              'line-color': '#3248a8',
-              'line-width': 6
-            }
-          });
-        });
-      }, () => {
-        console.log('Unable to retrieve your location');
-      });
-    }
-  }, []);
+  //       map.current = new mapboxgl.Map({
+  //         container: mapContainer.current,
+  //         style: 'mapbox://styles/mapbox/streets-v11',
+  //         center: [position.coords.longitude, position.coords.latitude],
+  //         zoom: zoom
+  //       });
+
+  //       map.current.on('load', () => {
+  //         if (!map.current.getSource('route')) {
+  //           map.current.addSource('route', {
+  //           'type': 'geojson',
+  //           'data': {
+  //             'type': 'Feature',
+  //             'properties': {},
+  //             'geometry': {
+  //               'type': 'LineString',
+  //               'coordinates': locations
+  //             }
+  //           }
+  //         })};
+  //         map.current.addLayer({
+  //           'id': 'route',
+  //           'type': 'line',
+  //           'source': 'route',
+  //           'layout': {
+  //             'line-join': 'round',
+  //             'line-cap': 'round'
+  //           },
+  //           'paint': {
+  //             'line-color': '#3248a8',
+  //             'line-width': 6
+  //           }
+  //         });
+  //       });
+  //     }, () => {
+  //       console.log('Unable to retrieve your location');
+  //     });
+  //   }
+  // }, []);
 
   // useEffect(() => {
   //   if (!map.current) return;
@@ -110,8 +114,11 @@ export default function Home({ locations }) {
       <Logo />
       <Settings />
       <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
-        <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} />
-        <div className='fixed bottom-0 right-0 w-full sm:w-[38rem] z-20 p-6 transition-all duration-500'>
+        {/* <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} /> */}
+        <div className='fixed bottom-0 right-0 w-full sm:w-[38rem] z-20 p-6 transition-all duration-500 space-y-4'>
+          <div className='relative flex w-full h-full z-20 bg-white rounded-2xl drop-shadow-lg'>
+            <ChooseBike bikes={bikes} />
+          </div>
           <div className='relative flex w-full h-full z-20 bg-white rounded-2xl drop-shadow-lg'>
             <div className='absolute flex flex-row w-full justify-end items-center z-20'>
               <button className='flex flex-row items-center space-x-1 px-2 py-1 m-4 rounded-lg bg-blue-600 hover:bg-blue-800 cursor-pointer text-white font-medium text-xs sm:text-sm'
