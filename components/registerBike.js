@@ -81,7 +81,7 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                                     const res = await AddTracker(name, tid)
                                     if(res) setIsOpen(false)
                                     else 0
-                                }}//setIsOpen(false)}
+                                }}
                             >
                                 Register
                             </button>

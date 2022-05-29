@@ -19,28 +19,18 @@ export async function getServerSideProps() {
   const uid=1;
   const trackers = await prisma.tracker.findMany({
     where: {
-        ownerId: uid,
+        ownerId: uid, 
     },
   });
   
-  const bikes = trackers.map(tracker => tracker.name)
-  var locations = [];
-  if(trackers.length>0){
-    const tracker = trackers[0];
-    locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
-  }
   return {
     props: {
-      bikes: bikes,
-      locations: locations
+      trackers: trackers
     }
   };
 }
 
-export default function Home({ bikes, locations }) {
-  console.log(locations)
-  console.log(bikes)
-
+export default function Home({ trackers }) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
   const mapContainer = useRef(null);
@@ -50,55 +40,59 @@ export default function Home({ bikes, locations }) {
   const [zoom, setZoom] = useState(15);
   const [isOpen, setIsOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
+  const [tracker, setBike] = useState(trackers[0]);
 
 
-  // useEffect(() => {
-  //   if (!navigator.geolocation) {
-  //     console.log("No navigator found");
-  //   } else {
-  //     navigator.geolocation.getCurrentPosition((position) => {
-  //       setLat(position.coords.latitude);
-  //       setLng(position.coords.longitude);
+  useEffect(() => {
+    const locations = tracker ? tracker.locations.map(str => str.split(",").map(Number)) : [];
+    console.log(locations)
 
-  //       map.current = new mapboxgl.Map({
-  //         container: mapContainer.current,
-  //         style: 'mapbox://styles/mapbox/streets-v11',
-  //         center: [position.coords.longitude, position.coords.latitude],
-  //         zoom: zoom
-  //       });
+    // if (!navigator.geolocation) {
+    //   console.log("No navigator found");
+    // } else {
+    //   navigator.geolocation.getCurrentPosition((position) => {
+    //     setLat(position.coords.latitude);
+    //     setLng(position.coords.longitude);
 
-  //       map.current.on('load', () => {
-  //         if (!map.current.getSource('route')) {
-  //           map.current.addSource('route', {
-  //           'type': 'geojson',
-  //           'data': {
-  //             'type': 'Feature',
-  //             'properties': {},
-  //             'geometry': {
-  //               'type': 'LineString',
-  //               'coordinates': locations
-  //             }
-  //           }
-  //         })};
-  //         map.current.addLayer({
-  //           'id': 'route',
-  //           'type': 'line',
-  //           'source': 'route',
-  //           'layout': {
-  //             'line-join': 'round',
-  //             'line-cap': 'round'
-  //           },
-  //           'paint': {
-  //             'line-color': '#3248a8',
-  //             'line-width': 6
-  //           }
-  //         });
-  //       });
-  //     }, () => {
-  //       console.log('Unable to retrieve your location');
-  //     });
-  //   }
-  // }, []);
+    //     map.current = new mapboxgl.Map({
+    //       container: mapContainer.current,
+    //       style: 'mapbox://styles/mapbox/streets-v11',
+    //       center: [position.coords.longitude, position.coords.latitude],
+    //       zoom: zoom
+    //     });
+
+    //     map.current.on('load', () => {
+    //       if (!map.current.getSource('route')) {
+    //         map.current.addSource('route', {
+    //         'type': 'geojson',
+    //         'data': {
+    //           'type': 'Feature',
+    //           'properties': {},
+    //           'geometry': {
+    //             'type': 'LineString',
+    //             'coordinates': locations
+    //           }
+    //         }
+    //       })};
+    //       map.current.addLayer({
+    //         'id': 'route',
+    //         'type': 'line',
+    //         'source': 'route',
+    //         'layout': {
+    //           'line-join': 'round',
+    //           'line-cap': 'round'
+    //         },
+    //         'paint': {
+    //           'line-color': '#3248a8',
+    //           'line-width': 6
+    //         }
+    //       });
+    //     });
+    //   }, () => {
+    //     console.log('Unable to retrieve your location');
+    //   });
+    // }
+  }, [tracker])
 
   // useEffect(() => {
   //   if (!map.current) return;
@@ -107,6 +101,7 @@ export default function Home({ bikes, locations }) {
   //     zoom: zoom
   //   })
   // }, [lng, lat, zoom])
+
 
   return (
     <div>
@@ -123,7 +118,7 @@ export default function Home({ bikes, locations }) {
         {/* <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} /> */}
         <div className='fixed bottom-0 right-0 w-full sm:w-[38rem] z-20 p-6 transition-all duration-500 space-y-4'>
           <div className='relative flex w-full h-full z-20 bg-white rounded-2xl drop-shadow-lg'>
-            <ChooseBike bikes={bikes} />
+            <ChooseBike trackers={trackers} setter={setBike} />
           </div>
           <div className='relative flex w-full h-full z-20 bg-white rounded-2xl drop-shadow-lg'>
             <div className='absolute flex flex-row w-full justify-end items-center z-20'>

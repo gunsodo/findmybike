@@ -1,6 +1,46 @@
 import Head from "next/head";
+import { useState } from "react";
+
+
+function CreateFailed(msg){
+    console.log(msg)
+    return 0
+}
+
+function CreateSuccess(user){
+    console.log('Login successful')
+    console.log(user)
+    return 0
+}
+
+async function AttemptCreate(username, password, confirm, name) {
+    if(!username) return CreateFailed('Enter your username');
+    if(!password) return CreateFailed('Enter your password');
+    if(!confirm) return CreateFailed('Enter your password again');
+    if(!name) return CreateFailed('Enter your name');
+    if(password!=confirm) return CreateFailed('Password does not match');
+    const body = JSON.stringify({
+        username: username,
+        password: password,
+        name: name
+    })
+    const res = await fetch('/api/user/create',{
+        method: 'POST',
+        headers: { 'Content-Type': 'application/json'},
+        body: body
+    });
+    if(res.status==409) return CreateFailed('Username taken');
+    const user = await res.json()
+    CreateSuccess(user)
+    return user;
+}
 
 export default function Signup() {
+    const [user, setUser] = useState("");
+    const [pass, setPass] = useState("");
+    const [conf, setConf] = useState("");
+    const [name, setName] = useState("");
+
     return (
         <div>
             <Head>
@@ -39,34 +79,35 @@ export default function Signup() {
                                 <p className="text-xs text-gray-500">
                                     Username / Email
                                 </p>
-                                <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                                <input value={user} onChange={(e) => setUser(e.target.value)} type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
 
                             <div className="flex flex-col space-y-2">
                                 <p className="text-xs text-gray-500">
                                     Password
                                 </p>
-                                <input type='password' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                                <input value={pass} onChange={(e) => setPass(e.target.value)} type='password' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
 
                             <div className="flex flex-col space-y-2">
                                 <p className="text-xs text-gray-500">
                                     Confirm Password
                                 </p>
-                                <input type='password' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                                <input value={conf} onChange={(e) => setConf(e.target.value)} type='password' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
 
                             <div className="flex flex-col space-y-2">
                                 <p className="text-xs text-gray-500">
                                     Name
                                 </p>
-                                <input type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
+                                <input value={name} onChange={(e) => setName(e.target.value)} type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
 
                             <div className="mt-4">
                                 <button
                                     type="button"
                                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
+                                    onClick={async() => await AttemptCreate(user, pass, conf, name)}
                                 >
                                     Create
                                 </button>
