@@ -8,7 +8,7 @@ function CreateFailed(msg){
 }
 
 function CreateSuccess(user){
-    console.log('Login successful')
+    console.log('Signup successful')
     console.log(user)
     return 0
 }

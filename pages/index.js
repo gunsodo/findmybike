@@ -19,19 +19,7 @@ import { withIronSessionSsr } from "iron-session/next";
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-<<<<<<< HEAD
-export async function getServerSideProps() {
-  const uid=1;
-  const trackers = await prisma.tracker.findMany({
-    where: {
-        ownerId: uid, 
-    },
-  });
-  
-  return {
-    props: {
-      trackers: trackers
-=======
+
 export const getServerSideProps = withIronSessionSsr(
   async function getServerSideProps({ req }) {
     if (req.session.user) {
@@ -54,7 +42,6 @@ export const getServerSideProps = withIronSessionSsr(
           locations: locations
         }
       };
->>>>>>> ff59048f14d399bf7b708b93ea1c4d3899e30174
     }
     else return {
       redirect: {
@@ -66,11 +53,7 @@ export const getServerSideProps = withIronSessionSsr(
   }
   , sessionOptions)
 
-<<<<<<< HEAD
-export default function Home({ trackers }) {
-=======
 export default function Home({ bikes, locations }) {
->>>>>>> ff59048f14d399bf7b708b93ea1c4d3899e30174
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
   const mapContainer = useRef(null);
