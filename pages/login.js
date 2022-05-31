@@ -18,7 +18,7 @@ export default function Login() {
         const res = await fetch('/api/user/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: body
+            body: JSON.stringify(body)
         });
         if (res.status == 404) return setErrorMsg('User not found.');
         if (res.status == 403) return setErrorMsg('Username and password do not match. Please try again.');
