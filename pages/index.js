@@ -6,41 +6,53 @@ import Image from 'next/image';
 import RegisterBike from '../components/registerBike';
 import UsageDisc from '../components/usageDisc';
 import ChooseBike from '../components/chooseBike';
+import { sessionOptions } from '../utils/session';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 
 // Prisma
 import prisma from "../utils/prisma";
 
+// iron-session
+import { withIronSessionSsr } from "iron-session/next";
+
 // Mapbox
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
-export async function getServerSideProps() {
-  const uid=1;
-  const trackers = await prisma.tracker.findMany({
-    where: {
-        ownerId: uid,
-    },
-  });
-  
-  const bikes = trackers.map(tracker => tracker.name)
-  var locations = [];
-  if(trackers.length>0){
-    const tracker = trackers[0];
-    locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
-  }
-  return {
-    props: {
-      bikes: bikes,
-      locations: locations
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    if (req.session.user) {
+      const uid = req.session.user.id;
+      const trackers = await prisma.tracker.findMany({
+        where: {
+          ownerId: uid,
+        },
+      });
+
+      const bikes = trackers.map(tracker => tracker.name)
+      var locations = [];
+      if (trackers.length > 0) {
+        const tracker = trackers[0];
+        locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
+      }
+      return {
+        props: {
+          bikes: bikes,
+          locations: locations
+        }
+      };
     }
-  };
-}
+    else return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+      props:{},
+    }
+  }
+  , sessionOptions)
 
 export default function Home({ bikes, locations }) {
-  console.log(locations)
-  console.log(bikes)
-
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
   const mapContainer = useRef(null);
@@ -51,6 +63,10 @@ export default function Home({ bikes, locations }) {
   const [isOpen, setIsOpen] = useState(false);
   const [isLocked, setIsLocked] = useState(false);
 
+  async function logout() {
+    await fetch('/api/user/logout');
+    window.location = '/login';
+  }
 
   // useEffect(() => {
   //   if (!navigator.geolocation) {
@@ -118,7 +134,7 @@ export default function Home({ bikes, locations }) {
       </Head>
 
       <Logo />
-      <Settings />
+      <Settings logout={logout} />
       <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
         {/* <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} /> */}
         <div className='fixed bottom-0 right-0 w-full sm:w-[38rem] z-20 p-6 transition-all duration-500 space-y-4'>

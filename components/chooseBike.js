@@ -2,11 +2,12 @@ import { Disclosure } from '@headlessui/react'
 import { ChevronUpIcon } from '@heroicons/react/solid'
 
 export default function ChooseBike({ bikes }) {
+    let buttonClassName = "flex justify-between w-full px-4 py-3 text-sm font-medium text-left text-gray-900 rounded-lg"
     return (
         <Disclosure as="div" className="flex-row w-full relative inline-block text-left">
             {({ open }) => (
                 <>
-                    <Disclosure.Button className="flex justify-between w-full px-4 py-3 text-sm font-medium text-left text-gray-900 rounded-lg hover:bg-gray-200">
+                    <Disclosure.Button className={open ? buttonClassName : buttonClassName + " hover:bg-gray-200"}>
                         <span>View another bike</span>
                         <ChevronUpIcon
                             className={`${open ? 'transform rotate-180' : ''
