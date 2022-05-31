@@ -18,14 +18,14 @@ export default function Login() {
         const res = await fetch('/api/user/login', {
             method: 'POST',
             headers: { 'Content-Type': 'application/json' },
-            body: JSON.stringify(body)
+            body: body
         });
         if (res.status == 404) return setErrorMsg('User not found.');
         if (res.status == 403) return setErrorMsg('Username and password do not match. Please try again.');
         else {
-            const user = await res.json()
+            // const user = await res.json()
             window.location = '/';
-            return user;
+            // return user;
         }
     }
 
