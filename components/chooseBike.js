@@ -1,7 +1,7 @@
 import { Disclosure } from '@headlessui/react'
 import { ChevronUpIcon } from '@heroicons/react/solid'
 
-export default function ChooseBike({ bikes }) {
+export default function ChooseBike({ trackers, setter }) {
     let buttonClassName = "flex justify-between w-full px-4 py-3 text-sm font-medium text-left text-gray-900 rounded-lg"
     return (
         <Disclosure as="div" className="flex-row w-full relative inline-block text-left">

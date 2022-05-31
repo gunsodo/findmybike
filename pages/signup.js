@@ -24,13 +24,14 @@ async function AttemptCreate(username, password, confirm, name) {
         password: password,
         name: name
     })
+    console.log('test0')
     const res = await fetch('/api/user/create',{
         method: 'POST',
         headers: { 'Content-Type': 'application/json'},
         body: body
     });
     if(res.status==409) return CreateFailed('Username taken');
-    const user = await res.json()
+    const user = await res.json();
     CreateSuccess(user)
     return user;
 }

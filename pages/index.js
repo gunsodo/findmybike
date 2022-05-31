@@ -30,16 +30,9 @@ export const getServerSideProps = withIronSessionSsr(
         },
       });
 
-      const bikes = trackers.map(tracker => tracker.name)
-      var locations = [];
-      if (trackers.length > 0) {
-        const tracker = trackers[0];
-        locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
-      }
       return {
         props: {
-          bikes: bikes,
-          locations: locations
+          trackers: trackers
         }
       };
     }
@@ -53,8 +46,14 @@ export const getServerSideProps = withIronSessionSsr(
   }
   , sessionOptions)
 
-export default function Home({ bikes, locations }) {
+export default function Home({ trackers }) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
+  
+  var locations = [];
+  if (trackers.length > 0) {
+    const tracker = trackers[0];
+    locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
+  }
 
   const mapContainer = useRef(null);
   const map = useRef(null);
