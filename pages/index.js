@@ -6,15 +6,20 @@ import Image from 'next/image';
 import RegisterBike from '../components/registerBike';
 import UsageDisc from '../components/usageDisc';
 import ChooseBike from '../components/chooseBike';
+import { sessionOptions } from '../utils/session';
 import { PlusCircleIcon } from '@heroicons/react/solid';
 
 // Prisma
 import prisma from "../utils/prisma";
 
+// iron-session
+import { withIronSessionSsr } from "iron-session/next";
+
 // Mapbox
 import mapboxgl from '!mapbox-gl';
 import 'mapbox-gl/dist/mapbox-gl.css';
 
+<<<<<<< HEAD
 export async function getServerSideProps() {
   const uid=1;
   const trackers = await prisma.tracker.findMany({
@@ -26,11 +31,46 @@ export async function getServerSideProps() {
   return {
     props: {
       trackers: trackers
-    }
-  };
-}
+=======
+export const getServerSideProps = withIronSessionSsr(
+  async function getServerSideProps({ req }) {
+    if (req.session.user) {
+      const uid = req.session.user.id;
+      const trackers = await prisma.tracker.findMany({
+        where: {
+          ownerId: uid,
+        },
+      });
 
+      const bikes = trackers.map(tracker => tracker.name)
+      var locations = [];
+      if (trackers.length > 0) {
+        const tracker = trackers[0];
+        locations = tracker && tracker.locations.map(str => str.split(",").map(Number));
+      }
+      return {
+        props: {
+          bikes: bikes,
+          locations: locations
+        }
+      };
+>>>>>>> ff59048f14d399bf7b708b93ea1c4d3899e30174
+    }
+    else return {
+      redirect: {
+        permanent: false,
+        destination: "/login",
+      },
+      props:{},
+    }
+  }
+  , sessionOptions)
+
+<<<<<<< HEAD
 export default function Home({ trackers }) {
+=======
+export default function Home({ bikes, locations }) {
+>>>>>>> ff59048f14d399bf7b708b93ea1c4d3899e30174
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
 
   const mapContainer = useRef(null);
@@ -42,6 +82,10 @@ export default function Home({ trackers }) {
   const [isLocked, setIsLocked] = useState(false);
   const [tracker, setBike] = useState(trackers[0]);
 
+  async function logout() {
+    await fetch('/api/user/logout');
+    window.location = '/login';
+  }
 
   useEffect(() => {
     const locations = tracker ? tracker.locations.map(str => str.split(",").map(Number)) : [];
@@ -113,7 +157,7 @@ export default function Home({ trackers }) {
       </Head>
 
       <Logo />
-      <Settings />
+      <Settings logout={logout} />
       <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
         {/* <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} /> */}
         <div className='fixed bottom-0 right-0 w-full sm:w-[38rem] z-20 p-6 transition-all duration-500 space-y-4'>
@@ -131,7 +175,7 @@ export default function Home({ trackers }) {
 
             <div className='grid grid-cols-3 gap-4 h-full w-full justify-center p-4'>
               <div className='relative col-span-1 -m-2'>
-                <Image src='/bike.png' layout='fill' objectFit='contain' />
+                <Image alt='Bike icon' src='/bike.png' layout='fill' objectFit='contain' />
               </div>
 
               <div className='flex flex-col col-span-2 justify-center space-y-3'>
