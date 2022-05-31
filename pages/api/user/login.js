@@ -4,7 +4,7 @@ import { sessionOptions } from "../../../utils/session";
 
 // /api/user/login
 export default withIronSessionApiRoute(async function handle(req, res) {
-    const { username, password } = req.body;
+    const { username, password } = JSON.parse(req.body);
     const user = await prisma.user.findUnique({
         where: {
             username: username,
