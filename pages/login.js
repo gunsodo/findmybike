@@ -87,7 +87,7 @@ export default function Login() {
                                 </button>
                                 <div className="flex flex-col items-end space-y-0.5">
                                     <p className="text-blue-900 text-xs cursor-pointer hover:underline">Forgot password</p>
-                                    <p className="text-blue-900 text-xs cursor-pointer hover:underline">Don't have an account</p>
+                                    <p className="text-blue-900 text-xs cursor-pointer hover:underline">Do not have an account</p>
                                 </div>
                             </div>
 

@@ -152,7 +152,7 @@ export default function Home({ bikes, locations }) {
 
             <div className='grid grid-cols-3 gap-4 h-full w-full justify-center p-4'>
               <div className='relative col-span-1 -m-2'>
-                <Image src='/bike.png' layout='fill' objectFit='contain' />
+                <Image alt='Bike icon' src='/bike.png' layout='fill' objectFit='contain' />
               </div>
 
               <div className='flex flex-col col-span-2 justify-center space-y-3'>
