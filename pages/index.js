@@ -73,51 +73,51 @@ export default function Home({ trackers }) {
     const locations = tracker ? tracker.locations.map(str => str.split(",").map(Number)) : [];
     console.log(locations)
 
-    // if (!navigator.geolocation) {
-    //   console.log("No navigator found");
-    // } else {
-    //   navigator.geolocation.getCurrentPosition((position) => {
-    //     setLat(position.coords.latitude);
-    //     setLng(position.coords.longitude);
+    if (!navigator.geolocation) {
+      console.log("No navigator found");
+    } else {
+      navigator.geolocation.getCurrentPosition((position) => {
+        setLat(position.coords.latitude);
+        setLng(position.coords.longitude);
 
-    //     map.current = new mapboxgl.Map({
-    //       container: mapContainer.current,
-    //       style: 'mapbox://styles/mapbox/streets-v11',
-    //       center: [position.coords.longitude, position.coords.latitude],
-    //       zoom: zoom
-    //     });
+        map.current = new mapboxgl.Map({
+          container: mapContainer.current,
+          style: 'mapbox://styles/mapbox/streets-v11',
+          center: [position.coords.longitude, position.coords.latitude],
+          zoom: zoom
+        });
 
-    //     map.current.on('load', () => {
-    //       if (!map.current.getSource('route')) {
-    //         map.current.addSource('route', {
-    //         'type': 'geojson',
-    //         'data': {
-    //           'type': 'Feature',
-    //           'properties': {},
-    //           'geometry': {
-    //             'type': 'LineString',
-    //             'coordinates': locations
-    //           }
-    //         }
-    //       })};
-    //       map.current.addLayer({
-    //         'id': 'route',
-    //         'type': 'line',
-    //         'source': 'route',
-    //         'layout': {
-    //           'line-join': 'round',
-    //           'line-cap': 'round'
-    //         },
-    //         'paint': {
-    //           'line-color': '#3248a8',
-    //           'line-width': 6
-    //         }
-    //       });
-    //     });
-    //   }, () => {
-    //     console.log('Unable to retrieve your location');
-    //   });
-    // }
+        map.current.on('load', () => {
+          if (!map.current.getSource('route')) {
+            map.current.addSource('route', {
+            'type': 'geojson',
+            'data': {
+              'type': 'Feature',
+              'properties': {},
+              'geometry': {
+                'type': 'LineString',
+                'coordinates': locations
+              }
+            }
+          })};
+          map.current.addLayer({
+            'id': 'route',
+            'type': 'line',
+            'source': 'route',
+            'layout': {
+              'line-join': 'round',
+              'line-cap': 'round'
+            },
+            'paint': {
+              'line-color': '#3248a8',
+              'line-width': 6
+            }
+          });
+        });
+      }, () => {
+        console.log('Unable to retrieve your location');
+      });
+    }
   }, [tracker])
 
   // useEffect(() => {
