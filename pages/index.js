@@ -72,7 +72,6 @@ export default function Home({ trackers , uid }) {
 
   useEffect(() => {
     const locations = tracker ? tracker.locations.map(str => str.split(",").map(Number)) : [];
-    console.log(locations)
 
     if (!navigator.geolocation) {
       console.log("No navigator found");
@@ -163,7 +162,7 @@ export default function Home({ trackers , uid }) {
 
               <div className='flex flex-col col-span-2 justify-center space-y-3'>
                 <div>
-                  <p className='font-bold text-2xl mb-2'>Main Bicycle</p>
+                  <p className='font-bold text-2xl mb-2'>{tracker.name}</p>
                   <p className='text-xs sm:text-sm'>Last moved: 12 minutes ago</p>
                   <p className='text-xs sm:text-sm'>590 meters away from me</p>
                 </div>
