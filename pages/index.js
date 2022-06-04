@@ -32,7 +32,8 @@ export const getServerSideProps = withIronSessionSsr(
 
       return {
         props: {
-          trackers: trackers
+          trackers: trackers,
+          uid : uid
         }
       };
     }
@@ -46,7 +47,7 @@ export const getServerSideProps = withIronSessionSsr(
   }
   , sessionOptions)
 
-export default function Home({ trackers }) {
+export default function Home({ trackers , uid }) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
   
   var locations = [];
@@ -212,7 +213,7 @@ export default function Home({ trackers }) {
         </div>
       </main>
 
-      <RegisterBike isOpen={isOpen} setIsOpen={setIsOpen} />
+      <RegisterBike isOpen={isOpen} setIsOpen={setIsOpen} uid={uid} />
     </div>
   )
 }

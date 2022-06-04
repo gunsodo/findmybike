@@ -2,12 +2,12 @@ import { Dialog } from "@headlessui/react"
 import { useState } from "react";
 
 
-async function AddTracker(name, tid) {
-    if(!name || !tid) return 0;
+async function AddTracker(name, tid, uid) {
+    if(!name || !tid || !uid) return 0;
     const body = JSON.stringify({
         tid: tid,
         name: name,
-        uid: 0
+        uid: uid
     })
     const res = await fetch('/api/tracker/create',{
         method: 'POST',
@@ -17,7 +17,7 @@ async function AddTracker(name, tid) {
     return await res.json();
 }
 
-export default function RegisterBike({ isOpen, setIsOpen }) {
+export default function RegisterBike({ isOpen, setIsOpen, uid }) {
     const [name, setName] = useState("")
     const [tid, setTid] = useState("")
 
@@ -78,7 +78,7 @@ export default function RegisterBike({ isOpen, setIsOpen }) {
                                 type="button"
                                 className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
                                 onClick={async() => {
-                                    const res = await AddTracker(name, tid)
+                                    const res = await AddTracker(name, tid, uid)
                                     if(res) setIsOpen(false)
                                     else 0
                                 }}
