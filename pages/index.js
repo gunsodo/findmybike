@@ -141,7 +141,7 @@ export default function Home({ trackers }) {
       <Logo />
       <Settings logout={logout} />
       <main className={isOpen ? 'w-screen h-screen blur-md' : 'w-screen h-screen'}>
-        {/* <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} /> */}
+        <div id='map' className='map-container w-full h-full z-0' ref={mapContainer} />
         <div className='fixed bottom-0 right-0 w-full sm:w-[38rem] z-20 p-6 transition-all duration-500 space-y-4'>
           <div className='relative flex w-full h-full z-20 bg-white rounded-2xl drop-shadow-lg'>
             <ChooseBike trackers={trackers} setter={setBike} />
