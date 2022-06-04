@@ -1,46 +1,39 @@
+import { ExclamationCircleIcon } from "@heroicons/react/solid";
 import Head from "next/head";
 import { useState } from "react";
-
-
-function CreateFailed(msg){
-    console.log(msg)
-    return 0
-}
-
-function CreateSuccess(user){
-    console.log('Signup successful')
-    console.log(user)
-    return 0
-}
-
-async function AttemptCreate(username, password, confirm, name) {
-    if(!username) return CreateFailed('Enter your username');
-    if(!password) return CreateFailed('Enter your password');
-    if(!confirm) return CreateFailed('Enter your password again');
-    if(!name) return CreateFailed('Enter your name');
-    if(password!=confirm) return CreateFailed('Password does not match');
-    const body = JSON.stringify({
-        username: username,
-        password: password,
-        name: name
-    })
-    console.log('test0')
-    const res = await fetch('/api/user/create',{
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json'},
-        body: body
-    });
-    if(res.status==409) return CreateFailed('Username taken');
-    const user = await res.json();
-    CreateSuccess(user)
-    return user;
-}
 
 export default function Signup() {
     const [user, setUser] = useState("");
     const [pass, setPass] = useState("");
     const [conf, setConf] = useState("");
     const [name, setName] = useState("");
+    const [errorMsg, setErrorMsg] = useState();
+
+    async function AttemptCreate() {
+        console.log(user, pass, conf, name)
+        if (!user) return setErrorMsg('Enter your username');
+        if (!pass) return setErrorMsg('Enter your password');
+        if (!conf) return setErrorMsg('Confirm your password');
+        if (!name) return setErrorMsg('Enter your name');
+        if (pass != conf) return setErrorMsg('Passwords do not match');
+
+        const body = JSON.stringify({
+            username: user,
+            password: pass,
+            name: name
+        })
+
+        const res = await fetch('/api/user/create', {
+            method: 'POST',
+            headers: { 'Content-Type': 'application/json' },
+            body: body
+        });
+
+        if (res.status == 409) return setErrorMsg('Username taken');
+        const userRes = await res.json();
+        window.location = '/';
+        return userRes;
+    }
 
     return (
         <div>
@@ -103,15 +96,20 @@ export default function Signup() {
                                 </p>
                                 <input value={name} onChange={(e) => setName(e.target.value)} type='text' className="w-full py-2 px-2 border-[0.1em] rounded-md"></input>
                             </div>
-
-                            <div className="mt-4">
+                            <div className="flex flex-row items-center justify-between mt-6">
                                 <button
                                     type="button"
                                     className="inline-flex justify-center px-4 py-2 text-sm font-medium text-blue-900 bg-blue-100 border border-transparent rounded-md hover:bg-blue-200 focus:outline-none focus-visible:ring-2 focus-visible:ring-offset-2 focus-visible:ring-blue-500"
-                                    onClick={async() => await AttemptCreate(user, pass, conf, name)}
+                                    onClick={async () => await AttemptCreate()}
                                 >
                                     Create
                                 </button>
+                                {errorMsg &&
+                                    <div className="flex flex-row items-center justify-between">
+                                        <ExclamationCircleIcon className="h-6 w-6 text-blue-900" />
+                                        <p className="p-2 w-full text-xs text-blue-900">{errorMsg}</p>
+                                    </div>
+                                }
                             </div>
                         </div>
                     </div>
