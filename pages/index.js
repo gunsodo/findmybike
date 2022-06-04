@@ -33,7 +33,7 @@ export const getServerSideProps = withIronSessionSsr(
       return {
         props: {
           trackers: trackers,
-          uid : uid
+          uid: uid
         }
       };
     }
@@ -42,14 +42,14 @@ export const getServerSideProps = withIronSessionSsr(
         permanent: false,
         destination: "/login",
       },
-      props:{},
+      props: {},
     }
   }
   , sessionOptions)
 
-export default function Home({ trackers , uid }) {
+export default function Home({ trackers, uid }) {
   mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_API;
-  
+
   var locations = [];
   if (trackers.length > 0) {
     const tracker = trackers[0];
@@ -90,16 +90,17 @@ export default function Home({ trackers , uid }) {
         map.current.on('load', () => {
           if (!map.current.getSource('route')) {
             map.current.addSource('route', {
-            'type': 'geojson',
-            'data': {
-              'type': 'Feature',
-              'properties': {},
-              'geometry': {
-                'type': 'LineString',
-                'coordinates': locations
+              'type': 'geojson',
+              'data': {
+                'type': 'Feature',
+                'properties': {},
+                'geometry': {
+                  'type': 'LineString',
+                  'coordinates': locations
+                }
               }
-            }
-          })};
+            })
+          };
           map.current.addLayer({
             'id': 'route',
             'type': 'line',
@@ -155,59 +156,68 @@ export default function Home({ trackers , uid }) {
               </button>
             </div>
 
-            <div className='grid grid-cols-3 gap-4 h-full w-full justify-center p-4'>
-              <div className='relative col-span-1 -m-2'>
-                <Image alt='Bike icon' src='/bike.png' layout='fill' objectFit='contain' />
-              </div>
-
-              <div className='flex flex-col col-span-2 justify-center space-y-3'>
-                <div>
-                  <p className='font-bold text-2xl mb-2'>{tracker.name}</p>
-                  <p className='text-xs sm:text-sm'>Last moved: 12 minutes ago</p>
-                  <p className='text-xs sm:text-sm'>590 meters away from me</p>
+            {tracker ?
+              <div className='grid grid-cols-3 gap-4 h-full w-full justify-center p-4'>
+                <div className='relative col-span-1 -m-2'>
+                  <Image alt='Bike icon' src='/bike.png' layout='fill' objectFit='contain' />
                 </div>
-                <div className='grid grid-cols-3 gap-2'>
-                  <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
-                    <div className='flex flex-row space-x-1 items-center justify-center'>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
-                      </svg>
-                      <p>Light</p>
-                    </div>
-                  </button>
-                  <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
-                    <div className='flex flex-row space-x-1 items-center justify-center'>
-                      <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                        <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
-                      </svg>
-                      <p>Sound</p>
-                    </div>
-                  </button>
-                  {isLocked ?
-                    <button className='bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
-                      <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(false)}>
-                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
-                        </svg>
-                        <p>Locked</p>
-                      </div>
-                    </button> :
+
+                <div className='flex flex-col col-span-2 justify-center space-y-3'>
+                  <div>
+                    <p className='font-bold text-2xl mb-2'>{tracker.name}</p>
+                    <p className='text-xs sm:text-sm'>Last moved: 12 minutes ago</p>
+                    <p className='text-xs sm:text-sm'>590 meters away from me</p>
+                  </div>
+                  <div className='grid grid-cols-3 gap-2'>
                     <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
-                      <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(true)}>
+                      <div className='flex flex-row space-x-1 items-center justify-center'>
                         <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
-                          <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M9.663 17h4.673M12 3v1m6.364 1.636l-.707.707M21 12h-1M4 12H3m3.343-5.657l-.707-.707m2.828 9.9a5 5 0 117.072 0l-.548.547A3.374 3.374 0 0014 18.469V19a2 2 0 11-4 0v-.531c0-.895-.356-1.754-.988-2.386l-.548-.547z" />
                         </svg>
-                        <p>Unlocked</p>
+                        <p>Light</p>
                       </div>
                     </button>
-                  }
+                    <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
+                      <div className='flex flex-row space-x-1 items-center justify-center'>
+                        <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                          <path strokeLinecap="round" strokeLinejoin="round" d="M11 5.882V19.24a1.76 1.76 0 01-3.417.592l-2.147-6.15M18 13a3 3 0 100-6M5.436 13.683A4.001 4.001 0 017 6h1.832c4.1 0 7.625-1.234 9.168-3v14c-1.543-1.766-5.067-3-9.168-3H7a3.988 3.988 0 01-1.564-.317z" />
+                        </svg>
+                        <p>Sound</p>
+                      </div>
+                    </button>
+                    {isLocked ?
+                      <button className='bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
+                        <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(false)}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M12 15v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2zm10-10V7a4 4 0 00-8 0v4h8z" />
+                          </svg>
+                          <p>Locked</p>
+                        </div>
+                      </button> :
+                      <button className='bg-blue-600 hover:bg-blue-800 text-white font-medium text-xs sm:text-sm rounded-md p-1'>
+                        <div className='flex flex-row space-x-1 items-center justify-center' onClick={() => setIsLocked(true)}>
+                          <svg xmlns="http://www.w3.org/2000/svg" className="h-5 w-5" fill="none" viewBox="0 0 24 24" stroke="currentColor" strokeWidth={2}>
+                            <path strokeLinecap="round" strokeLinejoin="round" d="M8 11V7a4 4 0 118 0m-4 8v2m-6 4h12a2 2 0 002-2v-6a2 2 0 00-2-2H6a2 2 0 00-2 2v6a2 2 0 002 2z" />
+                          </svg>
+                          <p>Unlocked</p>
+                        </div>
+                      </button>
+                    }
+                  </div>
+                </div>
+
+                <div className='col-span-3'>
+                  <UsageDisc />
                 </div>
               </div>
-
-              <div className='col-span-3'>
-                <UsageDisc />
+              :
+              <div className='grid grid-cols-3 gap-4 h-full w-full justify-center p-4'>
+                <div>
+                  <p className='font-bold text-2xl'>Add your bike</p>
+                </div>
               </div>
-            </div>
+            }
+
           </div>
         </div>
       </main>
