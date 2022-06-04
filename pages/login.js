@@ -23,9 +23,7 @@ export default function Login() {
         if (res.status == 404) return setErrorMsg('User not found.');
         if (res.status == 403) return setErrorMsg('Username and password do not match. Please try again.');
         else {
-            // const user = await res.json()
             window.location = '/';
-            // return user;
         }
     }
 
@@ -86,8 +84,8 @@ export default function Login() {
                                     Login
                                 </button>
                                 <div className="flex flex-col items-end space-y-0.5">
-                                    <p className="text-blue-900 text-xs cursor-pointer hover:underline">Forgot password</p>
-                                    <p className="text-blue-900 text-xs cursor-pointer hover:underline">Do not have an account</p>
+                                    {/* <a onClick={() => window.location = '/signup'} className="text-blue-900 text-xs cursor-pointer hover:underline">Forgot password</a> */}
+                                    <a onClick={() => window.location = '/signup'} className="text-blue-900 text-xs cursor-pointer hover:underline">Do not have an account</a>
                                 </div>
                             </div>
 
